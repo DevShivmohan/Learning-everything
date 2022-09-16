@@ -1,1 +1,85 @@
-<h1>Shivmohan</h1>
+<html>
+	<head>
+		<link rel="icon" type="image/x-icon" href="folder.png">
+		<title>File transfer service</title>
+		<style type="text/css">
+			.file-selector{
+				margin: auto;
+				width: 50%;
+				height: auto;
+				border: 3px solid green;
+				padding: 10px;
+				text-align: center;
+				background-color:blue;
+			}
+			
+			#label1{
+				size: 50px;
+			}
+			
+			body{
+				background-color: #0aa;
+			}
+			
+			p{
+				text-align:center;
+				word-spacing: 10px;
+				letter-spacing: 2px;
+				size: 100px;
+			}
+			#send-button{
+				text-align: center;
+				width: auto;  
+				height: auto;  
+				padding-top: 1px;
+				font-size: 15px;  
+				text-decoration-style: bold;
+				text-decoration-color: blue;
+				background-color: #00a;
+			}
+		</style>
+		<script type="text/javascript">
+			function acceptFile() {
+				// body...
+				const fileSelector = document.getElementById('myFile');
+  				fileSelector.addEventListener('change', (event) => {
+    				const fileList = event.target.files;
+    				for(const file of fileList){
+    					console.log(file.name);
+    					uploadFile(file);
+    				}
+  				});
+
+			}
+
+			function uploadFile(file1){
+				console.log("Shiv executed");
+				var xhr = new XMLHttpRequest();
+				var url = "http://139.59.56.154:8090/trf/security/send/file/data";
+				xhr.open("POST", url, true);
+				xhr.setRequestHeader("Content-Type", "multipart/form-data");
+				xhr.onreadystatechange = function () {
+					if (xhr.readyState === 4 && xhr.status === 200) {
+						console.log("Success response");
+						var json = JSON.parse(xhr.responseText);
+						console.log(json);
+						console.log(json.email + ", " + json.password);
+					}else{
+						console.log("Error response");
+					}
+				};
+				let dataArray = new FormData();
+    			dataArray.append('file', file1);
+				xhr.send(dataArray);
+			}
+		</script>
+	</head>
+	
+	<body>
+		<p>Transfer and receive files over server</p>
+		<div class="file-selector">
+		<label for="myFile" id="label1">Select file</label>
+		<input type="file" name="myFile" id="myFile" onclick="acceptFile()">
+		</div>
+	</body>
+</html>
